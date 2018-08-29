@@ -1,0 +1,14 @@
+{
+  "Devices": {
+    "Info": [
+      {
+        "idn": "Stanford Research Systems,DG645,s/n007199,ver1.19.118\r ",
+        "address": "ASRL3::INSTR"
+      }
+    ],
+    "Name": [
+      "Super Fast"
+    ]
+  },
+  "Macros": []
+}
