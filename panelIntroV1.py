@@ -124,7 +124,7 @@ class listIntroPanel(wx.Panel):
         
         self.SetSizerAndFit(list_sizer)
         
-        self.rm = visa.ResourceManager("@sim")
+        self.rm = visa.ResourceManager()
         t = Thread(target=self.findDevices)
         t.start()
 
