@@ -201,23 +201,21 @@ class deviceGeneralPanel(scrolled.ScrolledPanel):
 
             #22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
             for i in range(numPanelsCurrentDev):
-                self.notebookList.append(wx.Notebook(self))
-
                 # Appends a new general panel to the panel list and increments its respective counter.
-                generalPanelCount = generalPanelCount + 1
-                self.panelList.append(generalPanel(self.notebookList[generalPanelCount-1]))
+                generalPanelCount += 1
+                self.notebookList.append(wx.Notebook(self))
+                self.panelList.append([])
 
-                self.notebookList[generalPanelCount-1].AddPage(self.panelList[generalPanelCount-1], "Panel Intro")
+                tabCount = 1
+                self.panelList[generalPanelCount-1].append(generalPanel(self.notebookList[generalPanelCount-1]))
+                self.notebookList[generalPanelCount-1].AddPage(self.panelList[generalPanelCount-1][tabCount-1], "P 1")
 
                 # Append a new class to the class pointer list using the "self.findClass" function and
                 # the device's label. Also, increment the respective counter.
-                paramVec = self.panelList[generalPanelCount-1].paramVector
-                output = self.panelList[generalPanelCount-1].output
+                paramVec = self.panelList[generalPanelCount-1][tabCount-1].paramVector
+                output = self.panelList[generalPanelCount-1][tabCount-1].output
                 self.devClassPointer.append(self.findClass(sortedDeviceInfo[addedDevs][1], "GPIB", sortedDeviceInfo[addedDevs][0], paramVec, output, sortedDeviceInfo[addedDevs][2], generalPanelCount-1))
-                addedDevs = addedDevs + 1
-
-                # Determines the number of labels in this device class.
-                # btnLabelLength = len(self.devClassPointer[addedDevs-1].label_list)
+                addedDevs += 1
 
                 # Loops through the functions of the new device class, changes the labels on the general
                 # panel's buttons and binds buttons to device class functions.
@@ -226,17 +224,24 @@ class deviceGeneralPanel(scrolled.ScrolledPanel):
                 device = self.devClassPointer[addedDevs-1]
                 j = 0
                 for label, _, *param in device.label_list:
-                    self.panelList[generalPanelCount-1].btnPanel.button[j].SetLabel(label)
-                    self.panelList[generalPanelCount-1].btnPanel.button[j].SetBackgroundColour(wx.NullColour)
-                    ## Caleb Backbone Communication
-                    # self.Bind(wx.EVT_BUTTON, device.func_list[j], self.panelList[generalPanelCount-1].btnPanel.button[j])
-                    self.Bind(wx.EVT_BUTTON, self.publish(device, label, param), self.panelList[generalPanelCount-1].btnPanel.button[j])
+                    if j%15 == 0 and j != 0:
+                        j = 0
+                        tabCount = tabCount + 1
+                        self.panelList[generalPanelCount-1].append(generalPanel(self.notebookList[generalPanelCount-1]))
+                        self.notebookList[generalPanelCount - 1].AddPage(self.panelList[generalPanelCount-1][tabCount-1], "P"+str(tabCount))
+
+                    self.panelList[generalPanelCount-1][tabCount-1].btnPanel.button[j].SetLabel(label)
+                    self.panelList[generalPanelCount-1][tabCount-1].btnPanel.button[j].SetBackgroundColour(wx.NullColour)
+
+                    self.Bind(wx.EVT_BUTTON, self.publish(device, label, param), self.panelList[generalPanelCount-1][tabCount-1].btnPanel.button[j])
                     j += 1
                 #333333333333333333333333333333333333333333333333
 
                 for tab in self.devClassPointer[generalPanelCount-1].additionalPanels:
                     className, label = tab
-                    self.notebookList[generalPanelCount - 1].AddPage(className(self.notebookList[generalPanelCount - 1], self.devClassPointer[generalPanelCount-1]), label)
+                    tabCount += 1
+                    self.panelList[generalPanelCount - 1].append(className(self.notebookList[generalPanelCount - 1],self.devClassPointer[addedDevs-1]))
+                    self.notebookList[generalPanelCount - 1].AddPage(self.panelList[generalPanelCount - 1][tabCount - 1], label)
 
                 # Checks if the number of added panels reached the maximum allowed per horizontal sizer.
                 #333333333333333333333333333333333333333333333333
