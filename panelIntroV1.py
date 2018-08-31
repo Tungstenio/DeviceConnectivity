@@ -113,17 +113,21 @@ class listIntroPanel(wx.Panel):
         self.onlyFiles = []
         self.foundDevices = {}
 
-        self.rm = visa.ResourceManager()
-        t = Thread(target=self.findDevices)
-        t.start()
-
         list_sizer.Add(wx.StaticLine(self),   0, wx.ALL|wx.EXPAND, 5)
         self.staticDevices = wx.StaticText(self,1,"Devices Found:", size=(150,20))
         list_sizer.Add(self.staticDevices,    0, wx.CENTER, 0)
         self.listFiles = wx.ListBox(self, size = (400,400), choices = ["Looking for devices..."], style = wx.LB_SINGLE)
         list_sizer.Add(self.listFiles,        0, wx.ALL, 5)
-
+        self.btnAddress = wx.Button(self, label = "Open by Address")
+        list_sizer.Add(self.btnAddress,       0, wx.CENTER | wx.EXPAND | wx.LEFT | wx.RIGHT, 100)
+        self.Bind(wx.EVT_BUTTON, self.loadAddress, self.btnAddress)
+        
         self.SetSizerAndFit(list_sizer)
+        
+        self.rm = visa.ResourceManager("@sim")
+        t = Thread(target=self.findDevices)
+        t.start()
+
         
     def findDevices(self):
         for i in self.rm.list_resources():
@@ -134,6 +138,17 @@ class listIntroPanel(wx.Panel):
                 self.listFiles.Insert(entry, self.listFiles.GetCount() - 1)
                 
         self.listFiles.Delete(self.listFiles.GetCount() - 1)
+        
+    
+    def loadAddress(self, event = None):
+        with customAddressPopup(self) as addrPop:
+            if addrPop.ShowModal() == wx.ID_OK:
+                address = addrPop.address.GetLineText(0)
+                entry, device = getDeviceInfo(self.rm, address)
+                if entry:
+                    self.onlyFiles.append(entry)
+                    self.foundDevices[entry] = device
+                    self.listFiles.Insert(entry, self.listFiles.GetCount() - 1)
 
 class assignIntroPanel(wx.Panel):
 
@@ -252,7 +267,7 @@ class mainIntroPanel(wx.Panel):
     def onDevBtn(self, event):
         label = event.GetEventObject().GetLabel()
 
-        selec         = self.listPanel.listFiles.GetSelection()
+        selec = self.listPanel.listFiles.GetSelection()
         if selec < 0:
             stringResult = "Please select a device from the panel on the right before assigning a name"
             self.btnPanel.txtAssignResult.SetValue(stringResult)
