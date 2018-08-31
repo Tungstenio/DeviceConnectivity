@@ -73,20 +73,23 @@ class SuperFastClass(devGlobal):
         self.additionalPanels  = [(graphPanel, 'Graph Tab')]
 
         self.label_list = self.label_list + [
-                           ('Gets Model\nOption',             self.GetModelOption, ""),
-                           ('Segment\nLength',                self.SegmentLength, ""),
-                           ('Tests',                          self.Tests, ""),
-                           ('Sets Operating\nChannel',        self.SetOperatingChannel, ""),
+                           ('Gets Model\nOption',             self.GetModelOption,        ""),
+                           ('Segment\nLength',                self.SegmentLength,         ""),
+                           ('Tests',                          self.Tests,                 ""),
+                           ('Sets Operating\nChannel',        self.SetOperatingChannel,   ""),
                            ('Standard\nSquare Wave',          self.SetStandardSquareWave, ""),
-                           ('Sets Operating\nChannel On/Off', self.OutputOnOff, ""),
-                           ('Deletes\nAll Traces',            self.DeleteAllTraces, ""),
-                           ('Queries\nTrace Points',          self.TracePoints, ""),
-                           ('Ch1 Output\nOn/Off',             self.Ch1OnOff, ""),        #1
-                           ('Ch2 Output\nOn/Off',             self.Ch2OnOff, ""),        #2
-                           ('Sync\nCh1 and Ch2',              self.SyncChannels, ""),    #3
-                           ('Ch1 Trigger\nInt/Ext',           self.Ch1TrigIntExt, ""),   #4
-                           ('Ch2 Trigger\nInt/Ext',           self.Ch2TrigIntExt, ""),   #5
-                           ('Ch1 Set\nWait Time',             self.Ch1setWaitTime, "")   #6
+                           ('Sets Operating\nChannel On/Off', self.OutputOnOff,           ""),
+                           ('Deletes\nAll Traces',            self.DeleteAllTraces,       ""),
+                           ('Queries\nTrace Points',          self.TracePoints,           ""),
+                           ('Ch1 Output\nOn/Off',             self.Ch1OnOff,              ""),  # 1
+                           ('Ch2 Output\nOn/Off',             self.Ch2OnOff,              ""),  # 2
+                           ('Sync\nCh1 and Ch2',              self.SyncChannels,          ""),  # 3
+                           ('Ch1 Trigger\nInt/Ext',           self.Ch1TrigIntExt,         ""),  # 4
+                           ('Ch2 Trigger\nInt/Ext',           self.Ch2TrigIntExt,         ""),  # 5
+                           ('Ch1 Set\nWait Time',             self.Ch1setWaitTime,        ""),  # 6
+                           ('Ch1 Set\nWait Time',             self.Ch1setWaitTime,        ""),  # 6
+                           ('Ch1 Set\nWait Time',             self.Ch1setWaitTime,        ""),  # 6
+                           ('Ch1 Set\nWait Time',             self.Ch1setWaitTime,        "")   # 6
                            ]
 
         for label, function, *_ in self.label_list:

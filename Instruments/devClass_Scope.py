@@ -12,12 +12,24 @@ class ScopeClass(devGlobal):
         self.write(":STOP")
 
         self.label_list = self.label_list + [
-                           ('Run\nStop',             self.RunStop,       ""),
+                           ('Run\nStop',                 self.RunStop,       ""                ),
                            ('Set Voltage\nDivision (V)', self.SetVoltDiv,    "Voltage Division"),  #1
-                           ('Set Time\nDivision (μs)',    self.SetTimeDiv,    "Time Division"),  #2
-                           ('Set Trigger\nLevel',    self.SetTriggerLvl, "Trigger Level"),  #3
-                           ('Measure\nFrequency',    self.MeasFreq,      ""),  #4
-                           ('Measure\nVpp',          self.MeasVpp,       "")  #5
+                           ('Set Time\nDivision (μs)',   self.SetTimeDiv,    "Time Division"   ),  #2
+                           ('Set Trigger\nLevel',        self.SetTriggerLvl, "Trigger Level"   ),  #3
+                           ('Measure\nFrequency',        self.MeasFreq,      ""                ),  #4
+                           ('Measure\nVpp',              self.MeasVpp,       ""                ),   #5
+                           ('Measure\nVpp', self.MeasVpp, ""),  # 5
+                           ('Measure\nVpp', self.MeasVpp, ""),  # 5
+                           ('Measure\nVpp', self.MeasVpp, ""),  # 5
+                           ('Measure\nVpp', self.MeasVpp, ""),  # 5
+                           ('Measure\nVpp', self.MeasVpp, ""),  # 5
+                           ('Measure\nVpp', self.MeasVpp, ""),  # 5
+                           ('Measure\nVpp', self.MeasVpp, ""),  # 5
+                           ('Measure\nVpp', self.MeasVpp, ""),  # 5
+                           ('Measure\nVpp', self.MeasVpp, ""),  # 5
+                           ('Measure\nVpp', self.MeasVpp, ""),  # 5
+                           ('Measure\nVpp', self.MeasVpp, ""),  # 5
+                           ('Test', self.RunStop, "")  # 5
                            ]
                            
         # Theoretical api instead of using label list above
