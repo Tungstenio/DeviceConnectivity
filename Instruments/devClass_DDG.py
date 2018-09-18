@@ -1,21 +1,26 @@
 from Instruments.devGlobalFunctions import devGlobal
 
+from wx.lib.pubsub import pub
+
 class DDGClass(devGlobal):
     # Human readable name for the gui, note: Needs to be unique
     name = "DDG"
     def __init__(self, *args):
         devGlobal.__init__(self, *args)
 
-        self.func_list  = self.func_list + [
-                           self.SetDelayChCh,
-                           self.SetAmpCh,
-                           self.SetTriggerLvl,
-                           ]
         self.label_list = self.label_list + [
-                           'Set Delay\nChX-ChY',      #1
-                           'Set Output\nAmplitude',   #2
-                           'Set Trigger\nLevel',      #3
-                           ]
+            ('Set Delay\nChX-ChY', self.SetDelayChCh, ""),
+            ('Set Output\nAmplitude', self.SetAmpCh, "Voltage Division"),  # 1
+            ('Set Trigger\nLevel', self.SetTriggerLvl, "Trigger Level")
+        ]
+
+        # Theoretical api instead of using label list above
+        # self.register(self.RunStop, 'Run\nStop')
+        # self.register(self.SetVoltDiv, 'Set Voltage\nDivision (V)', name = "Voltage Division", sc = True, dc = False, parameter = True)
+        # self.register(self.SetVoltDiv, 'Set Time\nDivision (μs)', name = "Time Division", parameter = True)
+
+        for label, function, *_ in self.label_list:
+            pub.subscribe(function, self.createTopic(label))
 
     def SetDelayChCh(self, event):
         param = self.GetParamVector()
