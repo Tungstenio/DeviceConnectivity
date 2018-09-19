@@ -8,4 +8,12 @@ The requirements can be installed with pip using
 
 note: I used the [pipreqs tool](https://github.com/bndr/pipreqs) to generate the requirements file
 
-## Adding new devices
+You will also be required to install the NI Visa software available for free on their website
+Additionally you will need libusb, information can be found on [the libusb website](https://libusb.info)
+
+## Adding functions to devices
+When adding a new function remember to register it inside the instruments ```__init__```. Below is an example
+```python
+self.register(self.SetStandardSquareWave, 'Standard\nSquare Wave', parameters = ["Frequency"])
+```
+This registers a function ```SetStandardSquareWave``` with the label ```Standard\nSquare Wave``` and specifies that it takes one parameter "Frequency". Currently a function can only have 1 parameter but eventually we'd like to support commands that accept an arbitrary number and the list format here lays the foundation for that.

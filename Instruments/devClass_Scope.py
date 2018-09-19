@@ -11,34 +11,13 @@ class ScopeClass(devGlobal):
         self.runStop = 0
         self.write(":STOP")
 
-        self.label_list = self.label_list + [
-                           ('Run\nStop',                 self.RunStop,       ""                ),
-                           ('Set Voltage\nDivision (V)', self.SetVoltDiv,    "Voltage Division"),  #1
-                           ('Set Time\nDivision (μs)',   self.SetTimeDiv,    "Time Division"   ),  #2
-                           ('Set Trigger\nLevel',        self.SetTriggerLvl, "Trigger Level"   ),  #3
-                           ('Measure\nFrequency',        self.MeasFreq,      ""                ),  #4
-                           ('Measure\nVpp',              self.MeasVpp,       ""                ),   #5
-                           ('Measure\nVpp', self.MeasVpp, ""),  # 5
-                           ('Measure\nVpp', self.MeasVpp, ""),  # 5
-                           ('Measure\nVpp', self.MeasVpp, ""),  # 5
-                           ('Measure\nVpp', self.MeasVpp, ""),  # 5
-                           ('Measure\nVpp', self.MeasVpp, ""),  # 5
-                           ('Measure\nVpp', self.MeasVpp, ""),  # 5
-                           ('Measure\nVpp', self.MeasVpp, ""),  # 5
-                           ('Measure\nVpp', self.MeasVpp, ""),  # 5
-                           ('Measure\nVpp', self.MeasVpp, ""),  # 5
-                           ('Measure\nVpp', self.MeasVpp, ""),  # 5
-                           ('Measure\nVpp', self.MeasVpp, ""),  # 5
-                           ('Test', self.RunStop, "")  # 5
-                           ]
-                           
-        # Theoretical api instead of using label list above
-        # self.register(self.RunStop, 'Run\nStop')
-        # self.register(self.SetVoltDiv, 'Set Voltage\nDivision (V)', name = "Voltage Division", sc = True, dc = False, parameter = True)
-        # self.register(self.SetVoltDiv, 'Set Time\nDivision (μs)', name = "Time Division", parameter = True)
-
-        for label, function, *_ in self.label_list:
-            pub.subscribe(function, self.createTopic(label))
+        # Register functions for use in the interface
+        self.register(self.RunStop, 'Run\nStop')
+        self.register(self.SetVoltDiv, 'Set Voltage\nDivision (V)', parameters = ["Voltage Division"])
+        self.register(self.SetTimeDiv, 'Set Time\nDivision (μs)', parameters = ["Time Division"])
+        self.register(self.SetTriggerLvl, 'Set Trigger\nLevel', parameters = ["Trigger Level"])
+        self.register(self.MeasFreq, 'Measure\nFrequency')
+        self.register(self.MeasVpp, 'Measure\nVpp')
 
     def RunStop(self, msg):
         if self.runStop == 0:

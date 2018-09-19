@@ -8,19 +8,10 @@ class DDGClass(devGlobal):
     def __init__(self, *args):
         devGlobal.__init__(self, *args)
 
-        self.label_list = self.label_list + [
-            ('Set Delay\nChX-ChY', self.SetDelayChCh, ""),
-            ('Set Output\nAmplitude', self.SetAmpCh, "Voltage Division"),  # 1
-            ('Set Trigger\nLevel', self.SetTriggerLvl, "Trigger Level")
-        ]
+        self.register(self.SetDelayChCh, 'Set Delay\nChX-ChY')
+        self.register(self.SetAmpCh, 'Set Output\nAmplitude', parameters = ["Voltage Division"])
+        self.register(self.SetTriggerLvl, 'Set Trigger\nLevel', parameters = ["Trigger Level"])
 
-        # Theoretical api instead of using label list above
-        # self.register(self.RunStop, 'Run\nStop')
-        # self.register(self.SetVoltDiv, 'Set Voltage\nDivision (V)', name = "Voltage Division", sc = True, dc = False, parameter = True)
-        # self.register(self.SetVoltDiv, 'Set Time\nDivision (μs)', name = "Time Division", parameter = True)
-
-        for label, function, *_ in self.label_list:
-            pub.subscribe(function, self.createTopic(label))
 
     def SetDelayChCh(self, event):
         param = self.GetParamVector()
