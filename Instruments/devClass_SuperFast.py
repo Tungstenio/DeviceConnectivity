@@ -72,28 +72,21 @@ class SuperFastClass(devGlobal):
 
         self.additionalPanels  = [(graphPanel, 'Graph Tab')]
 
-        self.label_list = self.label_list + [
-                           ('Gets Model\nOption',             self.GetModelOption,        ""),
-                           ('Segment\nLength',                self.SegmentLength,         ""),
-                           ('Tests',                          self.Tests,                 ""),
-                           ('Sets Operating\nChannel',        self.SetOperatingChannel,   ""),
-                           ('Standard\nSquare Wave',          self.SetStandardSquareWave, ""),
-                           ('Sets Operating\nChannel On/Off', self.OutputOnOff,           ""),
-                           ('Deletes\nAll Traces',            self.DeleteAllTraces,       ""),
-                           ('Queries\nTrace Points',          self.TracePoints,           ""),
-                           ('Ch1 Output\nOn/Off',             self.Ch1OnOff,              ""),  # 1
-                           ('Ch2 Output\nOn/Off',             self.Ch2OnOff,              ""),  # 2
-                           ('Sync\nCh1 and Ch2',              self.SyncChannels,          ""),  # 3
-                           ('Ch1 Trigger\nInt/Ext',           self.Ch1TrigIntExt,         ""),  # 4
-                           ('Ch2 Trigger\nInt/Ext',           self.Ch2TrigIntExt,         ""),  # 5
-                           ('Ch1 Set\nWait Time',             self.Ch1setWaitTime,        ""),  # 6
-                           ('Ch1 Set\nWait Time',             self.Ch1setWaitTime,        ""),  # 6
-                           ('Ch1 Set\nWait Time',             self.Ch1setWaitTime,        ""),  # 6
-                           ('Ch1 Set\nWait Time',             self.Ch1setWaitTime,        "")   # 6
-                           ]
+        self.register(self.GetModelOption,        'Gets Model\nOption')
+        self.register(self.SegmentLength,         'Segment\nLength')
+        self.register(self.Tests,                 'Tests')
+        self.register(self.SetOperatingChannel,   'Sets Operating\nChannel') # not this function used channel input, but we don't handle that yet
+        self.register(self.SetStandardSquareWave, 'Standard\nSquare Wave', parameters = ["Frequency"])
+        self.register(self.OutputOnOff,           'Sets Operating\nChannel On/Off',  "")
+        self.register(self.DeleteAllTraces,       'Deletes\nAll Traces')
+        self.register(self.TracePoints,           'Queries\nTrace Points')
+        self.register(self.Ch1OnOff,              'Ch1 Output\nOn/Off')
+        self.register(self.Ch2OnOff,              'Ch2 Output\nOn/Off')
+        self.register(self.SyncChannels,          'Sync\nCh1 and Ch2')
+        self.register(self.Ch1TrigIntExt,         'Ch1 Trigger\nInt/Ext', parameters = ["Ch1 Trigger"])
+        self.register(self.Ch2TrigIntExt,         'Ch2 Trigger\nInt/Ext', parameters = ["Ch1 Trigger"])
+        self.register(self.Ch1setWaitTime,        'Ch1 Set\nWait Time', parameters = ["CH1 Wait Time"])
 
-        for label, function, *_ in self.label_list:
-            pub.subscribe(function, self.createTopic(label))
 
     def GetModelOption(self, msg):
         cmdString   = "Queries memory option on "

@@ -36,8 +36,14 @@ class devGlobal():
             param.append(self.paramVec[i].GetValue())
         return param
         
-    def register(self, func, label, name = "", sc = False, dc = False, parameter = False):
-        self.label_list.append((label, func, name, sc, dc, parameter))
+    def register(self, func, label, parameters = []):
+        # This needs to be changed, further down the road the inputs on each function 
+        # Need to be each given a name (currently we just have channel 1, channel 2,
+        # and parameter, the parameters list will hold those names
+        name = ""
+        if len(parameters) > 0:
+            name = parameters[0]
+        self.label_list.append((label, func, name, parameters))
         pub.subscribe(func, self.createTopic(label))
 
     def createTopic(self, label):
