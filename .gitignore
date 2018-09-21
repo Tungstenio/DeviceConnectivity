@@ -106,5 +106,5 @@ venv.bak/
 # vim
 *.un~
 
-# idea folder
+# idea folder must be ignored
 .idea
