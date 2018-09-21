@@ -70,7 +70,7 @@ class SuperFastClass(devGlobal):
 
         self.numTabs = 2
 
-        self.additionalPanels  = [(graphPanel, 'Graph Tab')]
+        self.additionalPanels = [(graphPanel, 'Graph Tab')]
 
         self.register(self.GetModelOption,        'Gets Model\nOption')
         self.register(self.SegmentLength,         'Segment\nLength')

@@ -21,38 +21,71 @@ class devGlobal():
 
         self.answer = []
 
-        self.label_list  = []
-        
-        self.register(self.GetId, 'Get Device\nId')
-		
-    def GetId(self, msg):
-        cmdString   = "Gets Identification on "
-        self.query("*IDN?") # We don't use the output here but it is a query
-        self.printOut(cmdString)
+        self.label_list = []
 
-    def GetParamVector(self):
+
+        self.write("*CLS")
+
+        self.register(self.GetId,    'Get Device\nId')
+        self.register(self.clear_dev_errorbyte, 'Clears Error\nByte')
+        self.register(self.getDevError, 'Get Device\nError')
+        # self.register(self.autoCal,  'Runs Auto\nCalibration')
+        self.register(self.selfTest, 'Runs Auto\nTest')
+
+    def GetId(self, msg):
+        cmd_string = "Gets Identification on "
+        self.query("*IDN?")
+        self.printOut(cmd_string)
+
+    def clear_dev_errorbyte(self, msg):
+        cmd_string = "Clears the error byte on "
+        self.write("*CLS")
+        self.printOut(cmd_string)
+
+    def getDevError(self, msg):
+        cmd_string = "Determines error on connectivity for "
+        self.query("*ESR?")
+        self.printOut(cmd_string)
+
+    # def autoCal(self, msg):
+    #     cmdString = "Runs auto calibration on "
+    #     self.write("*CAL?")
+    #     OPC = False
+    #     while not(OPC):
+    #         a = self.query("*ESR?")
+    #         print(a)
+    #         if bin(a)[-1:] == '1':
+    #             OPC = True
+    #     self.printOut(cmdString)
+
+    def selfTest(self, msg):
+        cmd_string = "Runs self test on "
+        self.query("*TST?")
+        self.printOut(cmd_string)
+
+    def get_param_vector(self, param_pointer):
         param = []
-        for i in range(len(self.paramVec)):
-            param.append(self.paramVec[i].GetValue())
+        for i in range(len(param_pointer)):
+            param.append(param_pointer[i].GetValue())
         return param
         
-    def register(self, func, label, parameters = []):
+    def register(self, func, label, parameters=[], panel_specific=""):
         # This needs to be changed, further down the road the inputs on each function 
         # Need to be each given a name (currently we just have channel 1, channel 2,
         # and parameter, the parameters list will hold those names
         name = ""
         if len(parameters) > 0:
             name = parameters[0]
-        self.label_list.append((label, func, name, parameters))
+        self.label_list.append((label, func, name, parameters, panel_specific))
         pub.subscribe(func, self.createTopic(label))
 
     def createTopic(self, label):
         # Beginning a topic with "INSTRUMENT--" is reserved
         return "INSTRUMENT<==>{}<==>{}".format(self.idn, label)
 
-    def printOut(self, cmdString):
-        totalCmdString = f"{cmdString}\n{self.idn}\n{self.answer}"
-        self.output.SetValue(totalCmdString)
+    def printOut(self, cmd_string):
+        total_cmd_string = f"{cmd_string}\n{self.idn}\n{self.answer}"
+        self.output.SetValue(total_cmd_string)
 
         self.answer = ''
 
@@ -88,7 +121,7 @@ class devGlobal():
                 errnb = -1
             if errnb != 0:
                 syst_err = syst_err.rstrip()
-                wrn_msg = 'ERR: "{0}" after CMD: "{1}"'.format(syst_err, cmd_str)
+                wrn_msg = 'ERR: "{0}"'.format(syst_err)
                 _ = self.devComm.query('*CLS; *OPC?') # clear the error-list
                 if paranoia_level >= 3:
                     raise NameError(wrn_msg)
