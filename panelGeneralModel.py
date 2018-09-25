@@ -215,6 +215,7 @@ class deviceGeneralPanel(scrolled.ScrolledPanel):
                         colour = wx.NullColour
                         self.panelList[generalPanelCount-1][tab_count-1].btnPanel.button[j].SetBackgroundColour(colour)
 
+                        param = self.panelList[generalPanelCount - 1][tab_count - 1].paramVector
                         self.Bind(wx.EVT_BUTTON, self.publish(device, label, param),
                                   self.panelList[generalPanelCount-1][tab_count-1].btnPanel.button[j])
                         j += 1
@@ -228,15 +229,16 @@ class deviceGeneralPanel(scrolled.ScrolledPanel):
                     self.notebookList[generalPanelCount-1].AddPage(self.panelList[generalPanelCount-1][tab_count-1],
                                                                    label)
 
+                    j = 0
                     # Add the buttons specific to the additional panels.
                     for btn_label, _, *null, panel_label in device.label_list:
-                        j = 0
                         if panel_label == label:
                             self.panelList[generalPanelCount - 1][tab_count - 1].button[j].SetLabel(btn_label)
                             colour = wx.NullColour
                             self.panelList[generalPanelCount - 1][tab_count - 1].button[j].SetBackgroundColour(colour)
 
                             param = self.panelList[generalPanelCount-1][tab_count-1].param_vec
+                            print(btn_label)
                             self.Bind(wx.EVT_BUTTON, self.publish(device, btn_label, param),
                                       self.panelList[generalPanelCount-1][tab_count-1].button[j])
                             j += 1
@@ -280,7 +282,8 @@ class deviceGeneralPanel(scrolled.ScrolledPanel):
         if inst:
             return inst(comType, devInfo, paramVec, output, devCommPointer, panelId)
         else: # Should never reach this case
-            raise Exception("It looks like {0} was deleted, please double check the Instrument files and restart this program".format(inst))
+            raise Exception("It looks like {0} was deleted, please double check the Instrument files and restart"
+                            " this program".format(inst))
 
     def PrintData(self, msg):
 
@@ -300,7 +303,10 @@ class deviceGeneralPanel(scrolled.ScrolledPanel):
             if param_name and not any(params):
                 wx.MessageDialog(self, f"{label} requires parameters!").ShowModal()
             else:
+                print(label)
                 msg = {"params": params, "param_name": param_name}
+                print(msg)
+                print(device.createTopic(label))
                 pub.sendMessage(device.createTopic(label), msg=msg)
 
         return onClick

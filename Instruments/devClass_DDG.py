@@ -75,7 +75,7 @@ class specPanel(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
 
-        main_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        main_sizer = wx.BoxSizer(wx.VERTICAL)
 
         self.specBtn   = specBtnPanel(self)
         w, _           = self.specBtn.GetSize()
@@ -85,8 +85,8 @@ class specPanel(wx.Panel):
         self.button    = self.specBtn.button
         self.param_vec = self.specInOut.paramVector
 
-        main_sizer.Add(self.specBtn,   0, wx.CENTER, 1)
-        main_sizer.Add(self.specInOut, 0, wx.ALL,    1)
+        main_sizer.Add(self.specInOut, 0, wx.CENTER, 1)
+        main_sizer.Add(self.specBtn,   0, wx.LEFT,    1)
 
         self.SetSizerAndFit(main_sizer)
 
@@ -97,7 +97,16 @@ class DDGClass(devGlobal):
         devGlobal.__init__(self, *args)
 
         self.register(self.advTrigMode, 'Enables Adv\nTriggering')
-        self.register(self.setCh1Delay, 'Sets Ch1\nDelay', parameters=["Delay [s]"], panel_specific='Ch1 Tab')
+
+        self.register(self.setCh1Delay, 'Set\nDelay', parameters=["Delay [s]"], panel_specific='Ch1 Tab')
+        self.register(self.setCh1Width, 'Set\nWidth', parameters=["Width [s]"], panel_specific='Ch1 Tab')
+        self.register(self.setCh1Amplitude, 'Set\nAmplitude', parameters=["Amplitude [V]"],
+                      panel_specific='Ch1 Tab')
+        self.register(self.setCh1Offset, 'Set\nOffset', parameters=["Offset [V]"],
+                      panel_specific='Ch1 Tab')
+        self.register(self.setCh1Polarity, 'Set Polarity\n(1=pos;0=neg)', parameters=["Offset [V]"],
+                      panel_specific='Ch1 Tab')
+
         self.register(self.setCh2Delay, 'Sets Ch2\nDelay', parameters=["Delay [s]"], panel_specific='Ch2 Tab')
         self.register(self.setCh3Delay, 'Sets Ch3\nDelay', parameters=["Delay [s]"], panel_specific='Ch3 Tab')
         self.register(self.setCh4Delay, 'Sets Ch4\nDelay', parameters=["Delay [s]"], panel_specific='Ch4 Tab')
@@ -114,16 +123,62 @@ class DDGClass(devGlobal):
 
     def setCh1Delay(self, msg):
         param = msg['params']
-        cmd_string = "Sets the delay on channel 1 (A) to {0} [s] on ".format(param[2])
+        cmd_string = "Sets the delay on channel 1 (AB) to {0} [s] on ".format(param[2])
         test_string = "dlay 2,0,{0}\n".format(param[2])
         self.write(test_string)
         test_string = "dlay?2\n".format(param[2])
         self.query(test_string)
         self.printOut(cmd_string)
+        test_string = "disp 11,2"
+        self.write(test_string)
+
+    def setCh1Width(self, msg):
+        param = msg['params']
+        cmd_string = "Sets the delay on channel 1 (AB) to {0} [s] on ".format(param[2])
+        test_string = "dlay 3,2,{0}\n".format(param[2])
+        self.write(test_string)
+        test_string = "dlay?3\n".format(param[2])
+        self.query(test_string)
+        self.printOut(cmd_string)
+        test_string = "disp 11,3"
+        self.write(test_string)
+
+    def setCh1Amplitude(self, msg):
+        param = msg['params']
+        cmd_string = "Sets the amplitude on channel 1 (AB) to {0} [V] on ".format(param[2])
+        test_string = "lamp 1,{0}\n".format(param[2])
+        self.write(test_string)
+        test_string = "lamp?1\n".format(param[2])
+        self.query(test_string)
+        self.printOut(cmd_string)
+        test_string = "disp 12,3"
+        self.write(test_string)
+
+    def setCh1Offset(self, msg):
+        param = msg['params']
+        cmd_string = "Sets the offset on channel 1 (AB) to {0} [V] on ".format(param[2])
+        test_string = "loff 1,{0}\n".format(param[2])
+        self.write(test_string)
+        test_string = "loff?1\n".format(param[2])
+        self.query(test_string)
+        self.printOut(cmd_string)
+        test_string = "disp 12,2"
+        self.write(test_string)
+
+    def setCh1Polarity(self, msg):
+        param = msg['params']
+        cmd_string = "Sets the polarity on channel 1 (AB) to {0} on ".format(param[2])
+        test_string = "lpol 1,{0}\n".format(param[2])
+        self.write(test_string)
+        test_string = "lpol?1\n".format(param[2])
+        self.query(test_string)
+        self.printOut(cmd_string)
+        test_string = "disp 13,3"
+        self.write(test_string)
 
     def setCh2Delay(self, msg):
         param = msg['params']
-        cmd_string = "Sets the delay on channel 1 (A) to {0} [s] on".format(param[2])
+        cmd_string = "Sets the delay on channel 1 (CD) to {0} [s] on".format(param[2])
         test_string = "dlay 4,0,{0}\n".format(param[2])
         self.write(test_string)
         test_string = "dlay?4\n".format(param[2])
@@ -132,7 +187,7 @@ class DDGClass(devGlobal):
 
     def setCh3Delay(self, msg):
         param = msg['params']
-        cmd_string = "Sets the delay on channel 1 (A) to {0} [s] on".format(param[2])
+        cmd_string = "Sets the delay on channel 1 (EF) to {0} [s] on".format(param[2])
         test_string = "dlay 6,0,{0}\n".format(param[2])
         self.write(test_string)
         test_string = "dlay?6\n".format(param[2])
@@ -141,7 +196,7 @@ class DDGClass(devGlobal):
 
     def setCh4Delay(self, msg):
         param = msg['params']
-        cmd_string = "Sets the delay on channel 1 (A) to {0} [s] on".format(param[2])
+        cmd_string = "Sets the delay on channel 1 (HG) to {0} [s] on".format(param[2])
         test_string = "dlay 8,0,{0}\n".format(param[2])
         self.write(test_string)
         test_string = "dlay?8\n".format(param[2])

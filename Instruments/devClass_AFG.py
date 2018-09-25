@@ -6,80 +6,32 @@ class AFGClass(devGlobal):
     def __init__(self, *args):
         devGlobal.__init__(self, *args)
 
-        self.func_list  = self.func_list + [
-                           self.Ch1OnOff,
-                           self.Ch2OnOff,
-                           self.SyncChannels,
-                           self.Ch1TrigIntExt,
-                           self.Ch2TrigIntExt,
-                           self.Ch1setWaitTime,
-                           self.Ch2setWaitTime,
-                           self.Ch1Ena10MExtRef,
-                           self.Ch2Ena10MExtRef
-                          ]
-        self.label_list = self.label_list + [
-                           'Ch1 Output\nOn/Off',         #1
-                           'Ch2 Output\nOn/Off',         #2
-                           'Sync\nCh1 and Ch2',          #3
-                           'Ch1 Trigger\nInt/Ext',       #4
-                           'Ch2 Trigger\nInt/Ext',       #5
-                           'Ch1 Set\nWait Time',         #6
-                           'Ch2 Set\nWait Time',         #7
-                           'Ch1 Enable\n10MHz Ext Ref',  #8
-                           'Ch2 Enable\n10MHz Ext Ref'   #9
-                          ]
+        self.register(self.Ch1Off, 'Ch1 Output\nOff')
+        self.register(self.Ch1On, 'Ch1 Output\nOn')
+        self.register(self.Ch1Sinusoid, 'Ch1 Waveform\nSinusoidal')
+        self.register(self.Ch1Frequency, 'Ch1 Frequency\nSet', parameters=["Frequency [Hz]"])
 
-    def Ch1OnOff(self, event):
-        param = self.GetParamVector()
-        StringInit = "Sets Ch1 Output to " + param[2] + " on "
-        self.cmdString = StringInit + self.com_type + self.address
-        print(self.cmdString)
+    def Ch1Off(self, msg):
+        cmd_string = "Turns channel 1 OFF on "
+        self.write(":OUTput1:STAte OFF")
+        self.printOut(cmd_string)
 
-    def Ch2OnOff(self, event):
-        param = self.GetParamVector()
-        StringInit = "Sets Ch2 Output to " + param[2] + " on "
-        self.cmdString = StringInit + self.com_type + self.address
-        print(self.cmdString)
+    def Ch1On(self, msg):
+        cmd_string = "Turns channel 1 ON on "
+        self.write(":OUTput1:STAte ON")
+        self.printOut(cmd_string)
 
-    def SyncChannels(self, event):
-        StringInit = "Sync Ch1 and Ch2 on "
-        self.cmdString = StringInit + self.com_type + self.address
-        print(self.cmdString)
+    def Ch1Sinusoid(self, msg):
+        cmd_string = "Sets sinusoidal waveform on channel 1 on "
+        self.write(":SOURce1:FUNCtion:SHAPe SINusoid")
+        self.printOut(cmd_string)
 
-    def Ch1TrigIntExt(self, event):
-        param = self.GetParamVector()
-        StringInit = "Sets Ch1 Trigger to " + param[2] + " on "
-        self.cmdString = StringInit + self.com_type + self.address
-        print(self.cmdString)
+    def Ch1Frequency(self, msg):
+        param = msg['params']
+        cmd_string = "Sets Channel 1 operating frequency on "
+        test_string = ":SOURce1:FREQuency:FIXed {0}".format(param[2])
+        self.write(test_string)
+        self.printOut(cmd_string)
 
-    def Ch2TrigIntExt(self, event):
-        param = self.GetParamVector()
-        StringInit = "Sets Ch2 Trigger to " + param[2] + " on "
-        self.cmdString = StringInit + self.com_type + self.address
-        print(self.cmdString)
-
-    def Ch1setWaitTime(self, event):
-        param = self.GetParamVector()
-        StringInit = "Sets Ch1 Wait Time to " + param[2] + " on "
-        self.cmdString = StringInit + self.com_type + self.address
-        print(self.cmdString)
-
-    def Ch2setWaitTime(self, event):
-        param = self.GetParamVector()
-        StringInit = "Sets Ch2 Wait Time to " + param[2] + " on "
-        self.cmdString = StringInit + self.com_type + self.address
-        print(self.cmdString)
-
-    def Ch1Ena10MExtRef(self, event):
-        StringInit = "Enable Ch1 10 MHz External Reference on "
-        self.cmdString = StringInit + self.com_type + self.address
-        print(self.cmdString)
-
-    def Ch2Ena10MExtRef(self, event):
-        StringInit = "Enable Ch2 10 MHz External Reference on "
-        self.cmdString = StringInit + self.com_type + self.address
-        print(self.cmdString)
-
-# IMPORTANT Don't forget this line (and remember to use the class name above)
 instrument = AFGClass
 
