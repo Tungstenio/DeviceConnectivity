@@ -10,6 +10,8 @@ class AFGClass(devGlobal):
         self.register(self.Ch1On, 'Ch1 Output\nOn')
         self.register(self.Ch1Sinusoid, 'Ch1 Waveform\nSinusoidal')
         self.register(self.Ch1Frequency, 'Ch1 Frequency\nSet', parameters=["Frequency [Hz]"])
+        self.register(self.Ch1VppAmp, 'Set Ch1 p-p\nVoltage', parameters=["Amplitude [V]"])
+        self.register(self.Ch1VoltageOffset, 'Set Ch1 Voltage\nOffset', parameters=["Offset [V]"])
 
     def Ch1Off(self, msg):
         cmd_string = "Turns channel 1 OFF on "
@@ -30,6 +32,20 @@ class AFGClass(devGlobal):
         param = msg['params']
         cmd_string = "Sets Channel 1 operating frequency on "
         test_string = ":SOURce1:FREQuency:FIXed {0}".format(param[2])
+        self.write(test_string)
+        self.printOut(cmd_string)
+
+    def Ch1VppAmp(self, msg):
+        param = msg['params']
+        cmd_string = "Sets Channel 1 voltage amplitude on "
+        test_string = ":SOURce1:VOLTage:LEVel:IMMediate:AMPLitude {0}".format(param[2])
+        self.write(test_string)
+        self.printOut(cmd_string)
+
+    def Ch1VoltageOffset(self, msg):
+        param = msg['params']
+        cmd_string = "Sets Channel 1 voltage offset on "
+        test_string = ":SOURce1:VOLTage:LEVel:IMMediate:OFFset {0}".format(param[2])
         self.write(test_string)
         self.printOut(cmd_string)
 
